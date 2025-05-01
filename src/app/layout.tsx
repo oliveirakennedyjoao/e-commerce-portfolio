@@ -2,13 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { TopBar } from "@/components/topbar";
 import { Filters } from "@/components/filters";
-
-if (process.env.NEXT_RUNTIME === "nodejs") {
-  import("../mocks/node").then(({ server }) => {
-    console.log("Starting mock service worker");
-    server.listen();
-  });
-}
+import { MSWLoader } from "@/mocks/msw-loader";
 
 export const metadata: Metadata = {
   title: "E-commerce App",
@@ -22,18 +16,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={"antialiased"}>
-        <main className="w-screen h-screen flex flex-row justify-center items-center">
-          <div className="grid grid-cols-12 grid-rows-12 gap-8 h-180 w-300 rounded-2xl bg-neutral-700 p-8">
-            <section className="col-span-12 row-span-1">
-              <TopBar />
-            </section>
-            <section className="col-span-3 row-span-11">
-              <Filters />
-            </section>
-            <section className="col-span-9 row-span-11">{children}</section>
+      <MSWLoader />
+      <body className={"h-screen p-8 antialiased box-border"}>
+        <div className="flex flex-col h-full">
+          <div className="flex-1 overflow-hidden rounded-xl">
+            <div className="grid grid-cols-12 grid-rows-12 bg-zinc-800 h-full py-4 px-8">
+              <section className="col-span-12 row-span-1">
+                <TopBar />
+              </section>
+              <aside className="col-span-3 row-span-11 overflow-y-auto custom-scrollbar pr-2">
+                <Filters />
+              </aside>
+              <main className="col-span-9 row-span-11 overflow-y-auto custom-scrollbar px-2">
+                {children}
+              </main>
+            </div>
           </div>
-        </main>
+        </div>
       </body>
     </html>
   );
