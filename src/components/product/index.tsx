@@ -1,22 +1,45 @@
-import React, { HTMLProps } from "react";
+import React, { HTMLProps, useEffect } from "react";
 import ProductImage from "../product-image";
 
 interface CardboxProps extends HTMLProps<HTMLDivElement> {
   title: string;
   description: string;
   price: number;
+  imgUrl: string;
 }
 
-export default function Product({ title, description, price }: CardboxProps) {
+export default function Product({
+  title,
+  description,
+  price,
+  imgUrl,
+}: CardboxProps) {
+  const [bannerImage, setBannerImage] = React.useState<string | null>(null);
+
   const locatedPrice = Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(price);
 
+  useEffect(() => {
+    const fetchProductImage = async () => {
+      const response = await fetch(`https://mock.com/image/${imgUrl}`);
+      const data = await response.json();
+
+      setBannerImage(data);
+    };
+
+    fetchProductImage();
+  });
+
+  if (!bannerImage) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-sm flex flex-col gap-2">
-      <div className="bg-zinc-700 dark:bg-gray-800 shadow-md rounded-lg p-4">
-        <ProductImage imageUrl="/product-placeholder.png" />
+      <div className="bg-zinc-700/50 dark:bg-gray-800 shadow-md rounded-lg p-4">
+        <ProductImage imageUrl={bannerImage} />
         <p className="text-white font-bold mb-4">{title}</p>
         <p className="text-zinc-400 mb-4 line-clamp-3 text-sm">{description}</p>
         <div className="flex justify-between items-center gap-4">

@@ -1,6 +1,6 @@
 export function Filters() {
   return (
-    <div className="h-full bg-zinc-700 rounded-2xl p-4">
+    <div className="h-full bg-zinc-700/50 rounded-2xl p-4">
       <form className="flex flex-col gap-2">
         <fieldset className="py-2">
           <legend>Categories:</legend>

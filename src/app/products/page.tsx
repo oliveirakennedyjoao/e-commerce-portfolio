@@ -31,6 +31,7 @@ export default function Home() {
               description={product.description}
               price={product.price}
               key={product.id}
+              imgUrl={product.image}
             />
           ))}
         </div>
